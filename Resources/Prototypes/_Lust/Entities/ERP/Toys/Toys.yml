@@ -1,0 +1,47 @@
+- type: entity
+  id: ERPShibariRope
+  abstract: true
+  name: shibari rope
+  description: This rope is designed for shibari, the art of Japanese rope bondage. Ready to tie up some pleasure?
+  components:
+  - type: Item
+    size: Small
+    storedRotation: 90
+  - type: Handcuff
+    cuffedRSI: _Lust/ERP/Stuff/Shibari/shibari_white.rsi
+    bodyIconState: body-overlay
+    breakoutTime: 6 # Keep in mind that's a toy
+    uncuffTime: 6 # /\
+  - type: Sprite
+    sprite: _Lust/ERP/Stuff/Shibari/shibari_white.rsi
+    state: handcuff
+  - type: Tag
+    tags:
+    - Handcuffs
+  - type: MeleeWeapon
+    wideAnimationRotation: 90
+    animation: WeaponArcDisarm
+    damage:
+      types:
+        Blunt: 0
+  - type: UseDelay
+    delay: 6
+  - type: Clickable
+
+- type: entity
+  id: ERPShibariRopeRed
+  parent: ERPShibariRope
+  components:
+  - type: Handcuff
+    cuffedRSI: _Lust/ERP/Stuff/Shibari/shibari_red.rsi
+  - type: Sprite
+    sprite: _Lust/ERP/Stuff/Shibari/shibari_red.rsi
+
+- type: entity
+  id: ERPShibariRopeWhite
+  parent: ERPShibariRope
+  components:
+  - type: Handcuff
+    cuffedRSI: _Lust/ERP/Stuff/Shibari/shibari_white.rsi
+  - type: Sprite
+    sprite: _Lust/ERP/Stuff/Shibari/shibari_white.rsi
