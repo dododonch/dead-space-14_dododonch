@@ -1,3 +1,5 @@
+using System.Numerics;
+using Content.Client.Sprite;
 using Content.Client.DisplacementMap;
 using Content.Shared.CCVar;
 using Content.Shared.Humanoid;
@@ -18,6 +20,7 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
     [Dependency] private readonly MarkingManager _markingManager = default!;
     [Dependency] private readonly DisplacementMapSystem _displacement = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private readonly ScaleVisualsSystem _ScaleVisuals = default!;
 
     public override void Initialize()
     {
@@ -51,7 +54,17 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         var sprite = entity.Comp2;
 
         sprite[_sprite.LayerMapReserve((entity.Owner, sprite), HumanoidVisualLayers.Eyes)].Color = humanoidAppearance.EyeColor;
+        // DS14-height: apply character height from centimeters after sprite rebuild.
+        ApplyHeightScale(entity);
     }
+
+    // DS14-height-start
+    private void ApplyHeightScale(Entity<HumanoidAppearanceComponent, SpriteComponent> entity)
+    {
+        var scale = HumanoidCharacterProfile.HeightToScale(entity.Comp1.Species, entity.Comp1.Sex, entity.Comp1.Height);
+        _sprite.SetScale((entity.Owner, entity.Comp2), new Vector2(scale, scale));
+    }
+    // DS14-height-end
 
     private static bool IsHidden(HumanoidAppearanceComponent humanoid, HumanoidVisualLayers layer)
         => humanoid.HiddenLayers.ContainsKey(layer) || humanoid.PermanentlyHidden.Contains(layer);
@@ -219,9 +232,11 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         humanoid.Sex = profile.Sex;
         humanoid.Gender = profile.Gender;
         humanoid.Age = profile.Age;
+        humanoid.Height = profile.Height; // DS14-height
         humanoid.Species = profile.Species;
         humanoid.SkinColor = profile.Appearance.SkinColor;
         humanoid.EyeColor = profile.Appearance.EyeColor;
+        _scaleVisuals.SetSpriteScale(uid, Vector2.One * profile.HeightScale);
 
         UpdateSprite((uid, humanoid, Comp<SpriteComponent>(uid)));
     }

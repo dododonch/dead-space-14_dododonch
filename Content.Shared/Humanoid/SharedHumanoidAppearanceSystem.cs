@@ -9,6 +9,7 @@ using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Inventory;
 using Content.Shared.Preferences;
+using Content.Shared.Sprite;
 using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
@@ -42,6 +43,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     [Dependency] private readonly MarkingManager _markingManager = default!;
     [Dependency] private readonly GrammarSystem _grammarSystem = default!;
     [Dependency] private readonly IdentitySystem _identity = default!;
+    [Dependency] private readonly SharedScaleVisualsSystem _scaleVisuals = default!;
 
     public static readonly ProtoId<SpeciesPrototype> DefaultSpecies = "Human";
 
@@ -475,6 +477,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         }
 
         humanoid.Age = profile.Age;
+        _scaleVisuals.SetSpriteScale(uid, Vector2.One * profile.HeightScale);
 
         Dirty(uid, humanoid);
     }
@@ -592,4 +595,20 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
 
         return Loc.GetString("identity-age-old");
     }
+
+
+
+    // DS14-height-start
+    public string GetHeightRepresentation(int height)
+    {
+        if (height <= 160)
+            return Loc.GetString("humanoid-appearance-component-height-short");
+
+        if (height < 180)
+            return Loc.GetString("humanoid-appearance-component-height-medium");
+
+        return Loc.GetString("humanoid-appearance-component-height-tall");
+    }
+    // DS14-height-end
+
 }

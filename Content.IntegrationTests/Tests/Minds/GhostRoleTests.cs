@@ -46,7 +46,7 @@ public sealed class GhostRoleTests
         await using var pair = await PoolManager.GetServerClient(new PoolSettings
         {
             Fresh = true,
-            Dirty = true,
+            Dirty = false,
             DummyTicker = false,
             Connected = true
         });
